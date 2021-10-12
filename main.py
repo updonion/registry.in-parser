@@ -1,6 +1,7 @@
 import requests
 from requests.structures import CaseInsensitiveDict
 from bs4 import BeautifulSoup
+from multiprocessing import Process
 
 def getPage(domain_name):
     url = "https://www.registry.in/domain-search"
@@ -21,10 +22,15 @@ def getPage(domain_name):
 
 def pageParser(domain_name):
     soup = BeautifulSoup(getPage(domain_name), 'html.parser')
-    return("Not available" if soup.select(".text-center-align") else "Available")
+    print(domain_name + (" is not available" if soup.select(".text-center-align") else " is available"))
+    
 
 while(True):
     domain_name = input("Type the name without .in: ")
     if(domain_name == "0"):
         break
-    print(pageParser(domain_name))
+
+    checker = Process(target=pageParser, args=(domain_name,))
+    checker.start()
+    
+checker.join()

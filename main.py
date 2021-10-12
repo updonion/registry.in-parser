@@ -22,15 +22,15 @@ def getPage(domain_name):
 
 def pageParser(domain_name):
     soup = BeautifulSoup(getPage(domain_name), 'html.parser')
-    print(domain_name + (" is not available" if soup.select(".text-center-align") else " is available"))
-    
+    # print(domain_name + (" is not available" if soup.select(".text-center-align") else " is available"))
+    print(soup.find("h2").get_text(" ") + soup.find("h3").get_text(" ") + soup.find("pre").get_text(" "))
 
-while(True):
-    domain_name = input("Type the name without .in: ")
-    if(domain_name == "0"):
-        break
+domain_name = input("Type the name without .in: ")
+domain_name = domain_name.replace("  ", " ")
+list_of_domains = domain_name.split()
 
+for domain_name in list_of_domains:
     checker = Process(target=pageParser, args=(domain_name,))
     checker.start()
-    
+
 checker.join()
